@@ -1,6 +1,32 @@
 spring:
+  application:
+    name: refund-cancel
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/payments
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
   rabbitmq:
     host: localhost
-    port: 15672
+    port: 5672
     username: guest
     password: guest
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+  otlp:
+    tracing:
+      endpoint: http://localhost:4318
+
+otel:
+  service:
+    name: refund-cancel
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level traceId=%X{traceId} spanId=%X{spanId} %logger{36} - %msg%n"

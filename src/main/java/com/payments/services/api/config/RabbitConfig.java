@@ -1,14 +1,25 @@
 package com.payments.services.api.config;
 
 import org.springframework.amqp.core.Queue;
+/* todo import em java é uma classe 
+ * este import é uma classe em java com o foco de declarar uma fila.*/
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+/* todo import em java é uma classe 
+ * este import é uma classe em java com o foco de fazer a conexão com o Rabbit mq.*/
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+/* todo import em java é uma classe 
+ * este import é uma classe em java com o importar o template utilziado para enviar mensagem.*/
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
+/* todo import em java é uma classe 
+ * este import é uma classe em java com o foco de importar containers utilizado pelo metodo @RabbitListener.*/
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+/* conversor de java para jason e vise versa.*/
 import org.springframework.context.annotation.Bean;
+/* importa a anotação bean.*/
 import org.springframework.context.annotation.Configuration;
-
+/* importa a anotação configuration.*/
 import java.util.Map;
+/* importa a biblioteca padrao java utilziada normalmente para armazenar chave-valor, em configuracoes rabbit mq*/
 
 @Configuration
 public class RabbitConfig {
@@ -28,13 +39,21 @@ public class RabbitConfig {
                 )
         );
     }
-
+/*as informações acima, nada mais é do que a configuração da fila no rabbit
+ * os parametros acima significa 
+ * Parâmetro		Valor					Significado
+	name		refund.quorum.queue			Nome da fila
+	durable			true					Sobrevive ao restart do RabbitMQ
+	xclusive		false					Pode ser usada por várias conexões
+	autoDelete		false					Não é apagada automaticamente
+	x-queue-type	quorum					Fila replicada e resiliente */
+    
     @Bean
-    public JacksonJsonMessageConverter messageConverter() {
+    public Jackson2JsonMessageConverter messageConverter() {
 
-        return new JacksonJsonMessageConverter();
+        return new Jackson2JsonMessageConverter();
     }
-
+/*A linha cima é so um conversor, tudo que receber em java vira json e vice versa*/
     @Bean
     public RabbitTemplate rabbitTemplate(
             ConnectionFactory connectionFactory
@@ -49,7 +68,8 @@ public class RabbitConfig {
 
         return template;
     }
-
+/*as linhas acima trata as configurações de conexões do rabbit, injetando automaticamente, tudo que estiver configurado no arquivo.yml 
+ * é visto como injecao dessas configurações.  */
     @Bean
     public SimpleRabbitListenerContainerFactory
     rabbitListenerContainerFactory(
@@ -69,4 +89,7 @@ public class RabbitConfig {
 
         return factory;
     }
+
+/*nas linhas acima é onde configuramos quem recebe essas mensagens, quando vc utiliza esse tipo de configuracao padrao 
+ * o spring irá buscar onde eu tenho @RabbitListener  */
 }
